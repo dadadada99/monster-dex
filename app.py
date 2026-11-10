@@ -7,7 +7,7 @@ from flask import Flask, jsonify, request
 app = Flask(__name__)
 app.json.ensure_ascii = False
 
-VERSION = "0.2.0"
+VERSION = "0.4.1"
 BASE_DIR = pathlib.Path(__file__).parent
 
 
@@ -42,6 +42,21 @@ def monster_detail(monster_id):
     # 반복문 밖: 끝까지 찾지 못한 경우
     return jsonify({"error": "없는 몬스터입니다: " + monster_id}), 404
 
+@app.route("/dex")
+def dex():
+    rows = ""
+    for m in load_monsters():
+        cells = "<td>" + m["name"] + "</td><td>" + m["element"] + "</td><td>" + str(m["level"]) + "</td><td>" + m["weakness"] + "</td>"
+        if m["level"] >= 30:
+            cells = cells.replace("<td>", "<td><b>").replace("</td>", "</b></td>")
+        rows += "<tr>" + cells + "</tr>"
+    return (
+        "<html><head><meta charset='utf-8'><title>몬스터 도감</title></head><body>"
+        + "<h1>몬스터 도감 v" + VERSION + "</h1>"
+        + "<table border='1'><tr><th>이름</th><th>속성</th><th>레벨</th><th>약점</th></tr>"
+        + rows + "</table></body></html>"
+    )
+
 @app.route("/monsters")
 def monster_list():
     monsters = load_monsters()
@@ -53,3 +68,4 @@ def monster_list():
         if monster["element"] == element:
             result.append(monster)
     return jsonify(result)
+
