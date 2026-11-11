@@ -28,7 +28,15 @@ def health():
 
 @app.route("/monsters")
 def monster_list():
-    return jsonify(load_monsters())
+    monsters = load_monsters()
+    element = request.args.get("element")
+    if element is None:
+        return jsonify(monsters)
+    result = []
+    for monster in monsters:
+        if monster["element"] == element:
+            result.append(monster)
+    return jsonify(result)
 
 
 if __name__ == "__main__":
@@ -58,17 +66,6 @@ def dex():
         + rows + "</table></body></html>"
     )
 
-@app.route("/monsters")
-def monster_list():
-    monsters = load_monsters()
-    element = request.args.get("element")
-    if element is None:
-        return jsonify(monsters)
-    result = []
-    for monster in monsters:
-        if monster["element"] == element:
-            result.append(monster)
-    return jsonify(result)
 
 def load_monsters():
     path = BASE_DIR / "data" / "monsters.yaml"
