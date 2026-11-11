@@ -3,6 +3,7 @@ import os
 import pathlib
 
 from flask import Flask, jsonify, request
+import yaml
 
 app = Flask(__name__)
 app.json.ensure_ascii = False
@@ -69,3 +70,6 @@ def monster_list():
             result.append(monster)
     return jsonify(result)
 
+def load_monsters():
+    path = BASE_DIR / "data" / "monsters.yaml"
+    return yaml.safe_load(path.read_text(encoding="utf-8"))
