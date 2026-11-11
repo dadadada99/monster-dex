@@ -36,8 +36,8 @@ pipeline {
         }
         stage('Syntax Check') {       
             steps {            
-                // py_complie app.py   deploy.py <- 문법 적용
-                runCmd "${env.PY} -m py_complie app.py deploy.py"       
+                // py_compile app.py   deploy.py <- 문법 적용
+                runCmd "${env.PY} -m py_compile app.py deploy.py"       
             }
         }
         stage('Test') {       
@@ -48,7 +48,7 @@ pipeline {
         }
         stage('Deploy') {       
             steps {            
-                runCmd "${env.PY} deloy.py"
+                runCmd "${env.PY} deploy.py"
             }
         }
     }
